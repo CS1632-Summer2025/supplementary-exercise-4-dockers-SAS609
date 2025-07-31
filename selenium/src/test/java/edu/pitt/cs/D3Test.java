@@ -3,6 +3,7 @@ package edu.pitt.cs;
 import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.FixMethodOrder;
 import org.junit.runners.MethodSorters;
+import org.openqa.selenium.chrome.ChromeOptions;
 
 import org.junit.Test;
 import org.junit.Before;
