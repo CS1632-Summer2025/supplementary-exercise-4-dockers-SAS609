@@ -40,8 +40,21 @@ jobs:
       - name: Launch Web Service
         run: docker compose up -d
 
-      - name: Wait for webservice to launch
-        run:  docker compose exec server selenium/src/test/java/edu/pitt/cs/wait-for-webserver.sh
+      - name: Inspect container filesystem (debug)
+        run: |
+          docker compose exec server sh -c "echo 'PWD:'; pwd; echo 'Listing selenium path:'; ls -R selenium/src/test/java/edu/pitt/cs | head -50 || true"
 
+      - name: Make wait-for-webserver.sh executable and run it
+        run: |
+          docker compose exec server sh -c '
+            if [ -f selenium/src/test/java/edu/pitt/cs/wait-for-webserver.sh ]; then
+              chmod +x selenium/src/test/java/edu/pitt/cs/wait-for-webserver.sh
+              ./selenium/src/test/java/edu/pitt/cs/wait-for-webserver.sh
+            else
+              echo "ERROR: script not found at expected location"
+              ls -R | head -200
+              exit 1
+            fi
+          '
       - name: Run Selenium Tests
         run: cd selenium && mvn test
